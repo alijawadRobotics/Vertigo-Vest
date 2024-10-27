@@ -1,0 +1,57 @@
+// *** NOTICE THE BUZZER IS TOO LAUD ***
+// By: Ali Jawad
+// Vertigo Vest
+// *** NOTICE THE BUZZER IS TOO LAUD ***
+// The Vertigo vest includes a accelerometer and Gyroscope 
+// processor to monitor patient and give a feedback location 
+// coordinates to correct the body position.
+// to start simulation click on the tilt sensor (sw200D)
+// and increase the tilt. when the value goes above 499, the 
+// buzzer and led will activate.
+// *** NOTICE THE BUZZER IS TOO LAUD ***
+
+#define LED_RED 10
+// red led, first interface. notify the fall
+#define BUZZER 6	
+// buzzer, second interface
+
+int sensorValue=0; 
+
+#include<Servo.h>
+// define servo library
+Servo Myservo;
+// *** NOTICE THE BUZZER IS TOO LAUD ***
+void setup(){
+  Serial.begin(9600); // vlaue 9600 in Hz to be noticeable 
+  pinMode(A0,INPUT);  // analoge input (tilt sensor)
+  pinMode(LED_RED,OUTPUT); // output 1 led
+  pinMode(BUZZER, OUTPUT); // output 2 buzzer
+  Myservo.attach(11); // Define servo output pin
+}
+// *** NOTICE THE BUZZER IS TOO LAUD ***
+void loop(){
+  sensorValue=digitalRead(A0)*500;
+  Serial.print(" ");
+  Serial.println(sensorValue);
+  if(sensorValue<500){
+    digitalWrite(LED_RED, HIGH);
+    tone(BUZZER,2400); // 25% freq (HZ) 
+    delay(1000); // wait 1 sec
+    noTone(BUZZER);
+    tone(BUZZER,4800); // 50% freq (HZ)
+    delay(1000); // wait 1 sec
+    noTone(BUZZER);
+    tone(BUZZER,72000); // 75% freq (HZ)
+    delay(1000); // wait 1 sec
+    noTone(BUZZER);
+    tone(BUZZER,9600); // 100% freq (HZ)
+    delay(1000); // wait 1 sec
+    noTone(BUZZER);
+    Myservo.write(0); // servo position 0 degree
+    delay(50); //ms
+  }
+  else(sensorValue>499);
+  digitalWrite(LED_RED,LOW); // LED off
+  noTone(BUZZER);			 // buzzer off
+  Myservo.write(180);		 // servo position 180 degree
+}
